@@ -16,6 +16,7 @@ export const buildLeadMessage = (lead: LeadFormData): string => {
     ['🏫', 'Institution Type', lead.institutionType],
     ['🏢', 'Institution & City', lead.institutionName],
     ['🎯', 'Target Enrolments', lead.targetEnrolments],
+    ['🧭', 'Service of Interest', lead.serviceInterest],
   ];
 
   const lines = ['🎓 *New Admissions Audit Request*'];

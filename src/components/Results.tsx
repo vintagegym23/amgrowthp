@@ -55,7 +55,7 @@ export const Results: React.FC<ResultsProps> = ({ onAuditClick }) => {
             onClick={onAuditClick}
             className="inline-flex items-center px-6 py-3.5 text-sm font-bold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-md transition-all cursor-pointer transform hover:-translate-y-0.5"
           >
-            View All Case Studies &amp; Schedule a Review
+            Schedule a Review
           </button>
         </div>
       </div>

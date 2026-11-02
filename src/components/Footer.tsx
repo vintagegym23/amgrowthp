@@ -1,5 +1,7 @@
 import React from 'react';
 import { Mail, MapPin, MessageCircle } from 'lucide-react';
+import { services, ServiceId } from '../data/services';
+import { scrollToTop } from '../lib/scroll';
 
 const WHATSAPP_HREF =
   'https://wa.me/918328248010?text=Hi%20AM%20Growth%20Partners%2C%20I%20would%20like%20to%20request%20an%20Admissions%20Growth%20Audit.';
@@ -56,9 +58,11 @@ const socialLinks = [
 
 interface FooterProps {
   onNavClick: (href: string) => void;
+  onServiceClick: (id: ServiceId) => void;
+  onPrivacyClick: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavClick, onServiceClick, onPrivacyClick }) => {
   return (
     <footer className="bg-darknavy text-slate-400 border-t border-slate-800" data-purpose="site-footer">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
@@ -103,26 +107,20 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
           <div>
             <h2 className="text-xs font-bold text-white uppercase tracking-wider mb-4">SERVICES</h2>
             <ul className="space-y-2.5 text-xs text-slate-400">
-              <li>
-                <button onClick={() => onNavClick('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Admissions Audit
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavClick('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Counselling Systems
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavClick('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Brand &amp; Digital Growth
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavClick('#services')} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Performance Dashboards
-                </button>
-              </li>
+              {services.map((service) => (
+                <li key={service.id}>
+                  <a
+                    href={`#${service.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onServiceClick(service.id);
+                    }}
+                    className="hover:text-white transition-colors"
+                  >
+                    {service.title}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -131,18 +129,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
             <h2 className="text-xs font-bold text-white uppercase tracking-wider mb-4">COMPANY</h2>
             <ul className="space-y-2.5 text-xs text-slate-400">
               <li>
-                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={scrollToTop} className="hover:text-white transition-colors cursor-pointer text-left">
                   Home
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavClick('#journey')} className="hover:text-white transition-colors cursor-pointer text-left">
+                <button onClick={() => onNavClick('#founder')} className="hover:text-white transition-colors cursor-pointer text-left">
                   About Us
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavClick('#results')} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Case Studies
+                  Results
                 </button>
               </li>
               <li>
@@ -181,15 +179,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavClick }) => {
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-4">
           <p>© 2025 AM Growth Partners. All rights reserved.</p>
           <div className="flex items-center space-x-6">
-            <a className="hover:text-white transition-colors" href="#audit-form">
+            <button type="button" onClick={onPrivacyClick} className="hover:text-white transition-colors cursor-pointer">
               Privacy Policy
-            </a>
-            <a className="hover:text-white transition-colors" href="#audit-form">
-              Terms &amp; Conditions
-            </a>
-            <a className="hover:text-white transition-colors" href="#audit-form">
-              Cookie Settings
-            </a>
+            </button>
           </div>
         </div>
       </div>

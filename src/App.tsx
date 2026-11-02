@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AdmissionsJourney } from './components/AdmissionsJourney';
@@ -12,24 +12,27 @@ import { Results } from './components/Results';
 import { WhyUs } from './components/WhyUs';
 import { Founder } from './components/Founder';
 import { FAQ } from './components/FAQ';
+import { GrowthCta } from './components/GrowthCta';
 import { FinalConversion } from './components/FinalConversion';
 import { Footer } from './components/Footer';
 import { MobileBottomBar } from './components/MobileBottomBar';
 import { SuccessModal } from './components/SuccessModal';
-import { ServiceDetailModal } from './components/ServiceDetailModal';
-import { LeadFormData, ServicePillar } from './types';
+import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
+import { ServiceDetails } from './components/ServiceDetails';
+import { LeadFormData } from './types';
+import { services, Service, ServiceId } from './data/services';
+import { scrollToSection } from './lib/scroll';
+
+const isServiceId = (value: string): value is ServiceId => services.some((service) => service.id === value);
 
 export default function App() {
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [submittedLead, setSubmittedLead] = useState<LeadFormData | null>(null);
-  const [selectedPillar, setSelectedPillar] = useState<ServicePillar | null>(null);
-
-  const scrollToSection = (id: string) => {
-    const el = document.querySelector(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const [activeService, setActiveService] = useState<ServiceId>('admission-conversion');
+  const [serviceInterest, setServiceInterest] = useState('');
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const openPrivacy = () => setPrivacyOpen(true);
+  const closePrivacy = useCallback(() => setPrivacyOpen(false), []);
 
   const handleAuditClick = () => {
     scrollToSection('#audit-form');
@@ -40,6 +43,36 @@ export default function App() {
         firstInput.focus();
       }
     }, 600);
+  };
+
+  // Selects a service tab and keeps the URL shareable (/#admission-conversion).
+  const selectService = useCallback((id: ServiceId) => {
+    setActiveService(id);
+    history.replaceState(null, '', `#${id}`);
+  }, []);
+
+  const openService = useCallback(
+    (id: ServiceId) => {
+      selectService(id);
+      requestAnimationFrame(() => document.getElementById('service-details')?.scrollIntoView({ behavior: 'smooth' }));
+    },
+    [selectService],
+  );
+
+  // Deep links: /#brand-strategy etc. open the matching tab on load and on hash changes.
+  useEffect(() => {
+    const syncFromHash = () => {
+      const id = window.location.hash.slice(1);
+      if (isServiceId(id)) openService(id);
+    };
+    syncFromHash();
+    window.addEventListener('hashchange', syncFromHash);
+    return () => window.removeEventListener('hashchange', syncFromHash);
+  }, [openService]);
+
+  const handleServiceRequest = (service: Service) => {
+    setServiceInterest(service.title);
+    handleAuditClick();
   };
 
   const handleJourneyClick = () => {
@@ -54,7 +87,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#FAFCFF] text-slate-800 selection:bg-brand-600 selection:text-white pb-14 lg:pb-0">
       {/* Top Navigation */}
-      <Navbar onAuditClick={handleAuditClick} />
+      <Navbar onAuditClick={handleAuditClick} onServiceClick={openService} />
 
       {/* Main Content Sections */}
       <main>
@@ -63,6 +96,7 @@ export default function App() {
           onAuditClick={handleAuditClick}
           onJourneyClick={handleJourneyClick}
           onFormSubmit={handleFormSubmit}
+          onPrivacyClick={openPrivacy}
         />
 
         {/* 2. Admissions Journey (From Enquiry to Enrolment) */}
@@ -74,11 +108,11 @@ export default function App() {
         {/* 4. The Solution (Connected System Pipeline in Dark Navy) */}
         <SolutionDark />
 
-        {/* 5. What We Do (4 Pillars with Deep-dive Modal trigger) */}
-        <WhatWeDo
-          onSelectPillar={(pillar) => setSelectedPillar(pillar)}
-          onAuditClick={handleAuditClick}
-        />
+        {/* 5. What We Do (4 service pillars) */}
+        <WhatWeDo onExploreService={openService} />
+
+        {/* 6. Service Details (tabbed deep-dive per pillar, condensed from the client SEO pack) */}
+        <ServiceDetails activeId={activeService} onSelect={selectService} onRequest={handleServiceRequest} />
 
         {/* 6. Who We Help (Schools, Colleges, Coaching, Brands) */}
         <WhoWeHelp />
@@ -102,11 +136,19 @@ export default function App() {
         <FAQ />
 
         {/* 13. Final Comprehensive Conversion Section & Audit Booking Form */}
-        <FinalConversion onFormSubmit={handleFormSubmit} />
+        {/* Shared closing CTA from the client SEO pack */}
+        <GrowthCta onRequest={handleAuditClick} />
+
+        <FinalConversion
+          onFormSubmit={handleFormSubmit}
+          serviceInterest={serviceInterest}
+          onServiceInterestChange={setServiceInterest}
+          onPrivacyClick={openPrivacy}
+        />
       </main>
 
       {/* Site Footer */}
-      <Footer onNavClick={scrollToSection} />
+      <Footer onNavClick={scrollToSection} onServiceClick={openService} onPrivacyClick={openPrivacy} />
 
       {/* Mobile Bottom Quick-Action Bar */}
       <MobileBottomBar onAuditClick={handleAuditClick} />
@@ -118,12 +160,8 @@ export default function App() {
         leadData={submittedLead}
       />
 
-      {/* Service Pillar Deep-Dive Modal */}
-      <ServiceDetailModal
-        pillar={selectedPillar}
-        onClose={() => setSelectedPillar(null)}
-        onBookAudit={handleAuditClick}
-      />
+      {/* Privacy Policy (draft for client review) */}
+      <PrivacyPolicyModal isOpen={privacyOpen} onClose={closePrivacy} />
     </div>
   );
 }

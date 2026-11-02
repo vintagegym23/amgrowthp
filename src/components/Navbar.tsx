@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
+import { services, ServiceId } from '../data/services';
+import { ServiceIcon } from './ServiceIcon';
+import { scrollToSection, scrollToTop } from '../lib/scroll';
 
 interface NavbarProps {
   onAuditClick: () => void;
+  onServiceClick: (id: ServiceId) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onAuditClick }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onAuditClick, onServiceClick }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
+    { label: 'Home', href: '#top' },
     { label: 'Admissions Journey', href: '#journey' },
     { label: 'Services', href: '#services' },
     { label: 'Process', href: '#framework' },
@@ -19,10 +24,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onAuditClick }) => {
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (href === '#top') {
+      scrollToTop();
+    } else {
+      scrollToSection(href);
     }
+  };
+
+  const handleServiceLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: ServiceId) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    onServiceClick(id);
   };
 
   return (
@@ -36,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onAuditClick }) => {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              scrollToTop();
             }}
           >
             <img
@@ -54,16 +66,49 @@ export const Navbar: React.FC<NavbarProps> = ({ onAuditClick }) => {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600" data-purpose="desktop-nav">
-            {navLinks.map((link) => (
-              <a 
-                key={link.href}
-                className="hover:text-brand-600 transition-colors" 
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.href === '#services' ? (
+                <div key={link.href} className="relative group">
+                  <a
+                    className="inline-flex items-center gap-1 hover:text-brand-600 transition-colors"
+                    href={link.href}
+                    onClick={(e) => handleNavClick(e, link.href)}
+                    aria-haspopup="true"
+                  >
+                    {link.label}
+                    <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden="true" />
+                  </a>
+                  {/* Dropdown: shown on hover or keyboard focus */}
+                  <div className="invisible opacity-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 transition-opacity absolute left-1/2 -translate-x-1/2 top-full pt-3 w-72">
+                    <ul className="bg-white border border-slate-200 rounded-2xl shadow-xl p-2">
+                      {services.map((service) => (
+                        <li key={service.id}>
+                          <a
+                            href={`#${service.id}`}
+                            onClick={(e) => handleServiceLinkClick(e, service.id)}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 text-slate-800"
+                          >
+                            <span className={`w-8 h-8 rounded-lg ${service.theme.iconBg} flex items-center justify-center shrink-0`}>
+                              <ServiceIcon id={service.id} className="w-4 h-4" />
+                            </span>
+                            <span className="text-sm font-semibold">{service.title}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <a
+                  key={link.href}
+                  className="hover:text-brand-600 transition-colors"
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                >
+                  {link.label}
+                </a>
+              ),
+            )}
           </nav>
 
           {/* Direct Actions & CTA */}
@@ -108,14 +153,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onAuditClick }) => {
         <div className="lg:hidden border-t border-slate-200 bg-white/95 px-4 pt-3 pb-6 space-y-3 shadow-xl">
           <nav className="flex flex-col space-y-2.5">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleNavClick(e, link.href)}
-                className="px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-brand-600 rounded-lg transition-colors"
-              >
-                {link.label}
-              </a>
+              <React.Fragment key={link.href}>
+                <a
+                  href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
+                  className="px-3 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50 hover:text-brand-600 rounded-lg transition-colors"
+                >
+                  {link.label}
+                </a>
+                {link.href === '#services' && (
+                  <div className="ml-3 pl-3 border-l-2 border-slate-100 flex flex-col gap-1">
+                    {services.map((service) => (
+                      <a
+                        key={service.id}
+                        href={`#${service.id}`}
+                        onClick={(e) => handleServiceLinkClick(e, service.id)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-600 rounded-lg transition-colors"
+                      >
+                        <ServiceIcon id={service.id} className={`w-4 h-4 ${service.theme.accent}`} />
+                        {service.title}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
             ))}
           </nav>
 

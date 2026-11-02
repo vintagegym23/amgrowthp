@@ -18,6 +18,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Keep linked sections (/#faq etc.) clear of the sticky 80px navbar */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   font-family: "Plus Jakarta Sans Variable", system-ui, sans-serif;
   color: #1e293b;

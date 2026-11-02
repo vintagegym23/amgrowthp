@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { LeadFormData } from '../types';
 import { sendLeadToWhatsApp } from '../lib/whatsapp';
+import { services } from '../data/services';
 
 interface FinalConversionProps {
   onFormSubmit: (data: LeadFormData) => void;
+  serviceInterest: string;
+  onServiceInterestChange: (value: string) => void;
+  onPrivacyClick: () => void;
 }
 
-export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }) => {
+export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit, serviceInterest, onServiceInterestChange, onPrivacyClick }) => {
   const [formData, setFormData] = useState<LeadFormData>({
     fullName: '',
     phone: '',
@@ -32,13 +36,14 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
       return;
     }
 
-    const lead: LeadFormData = { ...formData, formSource: 'Full Audit Request Form' };
+    const lead: LeadFormData = { ...formData, serviceInterest, formSource: 'Full Audit Request Form' };
     sendLeadToWhatsApp(lead);
 
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
       onFormSubmit(lead);
+      onServiceInterestChange('');
       setFormData({
         fullName: '',
         phone: '',
@@ -151,6 +156,20 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
             </div>
 
             <div>
+              <label htmlFor="audit-service" className="block text-xs font-bold text-slate-700 mb-1.5">Service of Interest</label>
+              <select id="audit-service"
+                value={serviceInterest}
+                onChange={(e) => onServiceInterestChange(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20 text-slate-800 bg-white transition-colors"
+              >
+                <option value="">Not sure yet / All areas</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.title}>{service.title}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
               <label htmlFor="audit-challenge" className="block text-xs font-bold text-slate-700 mb-1.5">Key Challenge / Objective</label>
               <textarea id="audit-challenge"
                 rows={3}
@@ -171,6 +190,14 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
+
+            <p className="text-[11px] text-center text-slate-500 leading-relaxed">
+              By submitting, you agree to be contacted by AM Growth Partners on WhatsApp about your enquiry. See our{' '}
+              <button type="button" onClick={onPrivacyClick} className="underline hover:text-brand-700 cursor-pointer">
+                Privacy Policy
+              </button>
+              .
+            </p>
 
             {/* Secondary Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3 text-xs">

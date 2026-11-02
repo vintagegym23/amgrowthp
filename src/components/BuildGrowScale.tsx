@@ -12,6 +12,10 @@ export const BuildGrowScale: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">
             Wherever You Are, We Build From There.
           </h2>
+          <p className="mt-5 text-sm sm:text-base text-slate-600 leading-relaxed">
+            Our four service pillars define <em>what</em> we solve. Build → Grow → Scale defines <em>how</em> we work
+            with you over time.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

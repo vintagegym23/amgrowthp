@@ -7,9 +7,10 @@ interface HeroProps {
   onAuditClick: () => void;
   onJourneyClick: () => void;
   onFormSubmit: (data: LeadFormData) => void;
+  onPrivacyClick: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onAuditClick, onJourneyClick, onFormSubmit }) => {
+export const Hero: React.FC<HeroProps> = ({ onAuditClick, onJourneyClick, onFormSubmit, onPrivacyClick }) => {
   const [formData, setFormData] = useState<LeadFormData>({
     fullName: '',
     phone: '',
@@ -57,13 +58,13 @@ export const Hero: React.FC<HeroProps> = ({ onAuditClick, onJourneyClick, onForm
         {/* Main Central Headline Area */}
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-slate-950 tracking-tight leading-[1.15] mb-6">
-            More Admissions Don't Start With More Leads. <br className="hidden sm:inline" />
+            More Admissions Do Not Start With More Leads. <br className="hidden sm:inline" />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-blue-700">
               They Start With a Better System.
             </span>
           </h1>
           <p className="text-base sm:text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto font-normal leading-relaxed mb-10">
-            AM Growth Partners helps schools, colleges, coaching institutes, and education brands turn fragmented admissions processes into structured, measurable growth systems.
+            We help educational institutions attract the right enquiries, convert more admissions, retain existing students, and build sustainable growth systems.
           </p>
         </div>
 
@@ -208,6 +209,13 @@ export const Hero: React.FC<HeroProps> = ({ onAuditClick, onJourneyClick, onForm
                 <p className="text-[11px] text-center text-slate-500 flex items-center justify-center gap-1.5 pt-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                   Guaranteed callback within 4 business hours
+                </p>
+                <p className="text-[11px] text-center text-slate-500 leading-relaxed">
+                  By submitting, you agree to be contacted by AM Growth Partners on WhatsApp about your enquiry. See our{' '}
+                  <button type="button" onClick={onPrivacyClick} className="underline hover:text-brand-700 cursor-pointer">
+                    Privacy Policy
+                  </button>
+                  .
                 </p>
               </form>
             </div>
