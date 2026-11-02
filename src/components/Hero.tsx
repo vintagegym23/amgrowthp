@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, ChevronDown, Check, CheckCircle2 } from 'lucide-react';
 import { LeadFormData } from '../types';
+import { sendLeadToWhatsApp } from '../lib/whatsapp';
 
 interface HeroProps {
   onAuditClick: () => void;
@@ -23,10 +24,13 @@ export const Hero: React.FC<HeroProps> = ({ onAuditClick, onJourneyClick, onForm
     if (!formData.fullName.trim() || !formData.phone.trim() || !formData.institutionType) {
       return;
     }
+    const lead: LeadFormData = { ...formData, formSource: 'Quick Audit Form (top of page)' };
+    sendLeadToWhatsApp(lead);
+
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      onFormSubmit(formData);
+      onFormSubmit(lead);
       setFormData({
         fullName: '',
         phone: '',

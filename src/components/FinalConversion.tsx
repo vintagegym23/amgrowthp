@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { LeadFormData } from '../types';
+import { sendLeadToWhatsApp } from '../lib/whatsapp';
 
 interface FinalConversionProps {
   onFormSubmit: (data: LeadFormData) => void;
@@ -31,10 +32,13 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
       return;
     }
 
+    const lead: LeadFormData = { ...formData, formSource: 'Full Audit Request Form' };
+    sendLeadToWhatsApp(lead);
+
     setIsSubmitting(true);
     setTimeout(() => {
       setIsSubmitting(false);
-      onFormSubmit(formData);
+      onFormSubmit(lead);
       setFormData({
         fullName: '',
         phone: '',
