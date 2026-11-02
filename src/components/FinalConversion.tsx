@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Phone } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LeadFormData } from '../types';
 
 interface FinalConversionProps {
@@ -172,7 +172,7 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3 text-xs">
               <a
                 className="inline-flex items-center gap-2 font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 px-4 py-2.5 rounded-lg border border-emerald-200 transition-colors shadow-sm"
-                href="https://wa.me/918328248816?text=Hi%20AM%20Growth%20Partners%2C%20I%20would%20like%20to%20request%20an%20Admissions%20Growth%20Audit."
+                href="https://wa.me/918328248010?text=Hi%20AM%20Growth%20Partners%2C%20I%20would%20like%20to%20request%20an%20Admissions%20Growth%20Audit."
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -180,14 +180,6 @@ export const FinalConversion: React.FC<FinalConversionProps> = ({ onFormSubmit }
                   <path d="M12.031 2C6.505 2 2.012 6.484 2.012 12.008c0 1.93.551 3.73 1.503 5.258L2.006 22l4.887-1.464a9.92 9.92 0 005.138 1.472h.004c5.525 0 10.016-4.486 10.016-10.01 0-5.525-4.491-10.01-10.02-10.01zm5.836 14.204c-.244.685-1.418 1.309-1.961 1.353-.518.042-1.196.06-3.479-.884-2.738-1.134-4.512-3.896-4.65-4.077-.137-.18-1.1-1.465-1.1-2.793 0-1.328.694-1.981.94-2.247.246-.266.538-.332.718-.332.18 0 .36.002.518.01.168.008.393-.064.615.47.228.547.776 1.895.845 2.034.068.139.114.301.023.483-.092.181-.137.294-.273.456-.136.162-.288.36-.41.483-.138.138-.282.289-.121.566.16.277.713 1.173 1.53 1.9 1.05 1.026 1.934 1.343 2.21 1.48.277.137.439.115.6-.07.162-.185.69-.803.874-1.079.184-.276.368-.23.614-.139.246.092 1.564.737 1.832.87.268.133.447.199.513.31.066.111.066.643-.178 1.328z" />
                 </svg>
                 Chat on WhatsApp
-              </a>
-
-              <a
-                className="inline-flex items-center gap-2 font-bold text-slate-700 hover:text-brand-600 bg-white px-4 py-2.5 rounded-lg border border-slate-200 transition-colors shadow-sm"
-                href="tel:+918328248816"
-              >
-                <Phone className="w-4 h-4 text-brand-600" />
-                Call Strategist (+91 8328248816)
               </a>
             </div>
           </form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Phone, X, MessageSquare } from 'lucide-react';
+import { CheckCircle2, X, MessageSquare } from 'lucide-react';
 import { LeadFormData } from '../types';
 
 interface SuccessModalProps {
@@ -11,8 +11,7 @@ interface SuccessModalProps {
 export const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, leadData }) => {
   if (!isOpen) return null;
 
-  const phoneHref = "tel:+918328248816";
-  const whatsappHref = `https://wa.me/918328248816?text=${encodeURIComponent(
+  const whatsappHref = `https://wa.me/918328248010?text=${encodeURIComponent(
     `Hi AM Growth Partners, I just submitted an admissions audit request for ${leadData?.fullName || 'my institution'} (${leadData?.institutionName || leadData?.institutionType || 'Education Institute'}). Please connect with me.`
   )}`;
 
@@ -68,13 +67,6 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, onClose, lea
             Connect Immediately on WhatsApp
           </a>
 
-          <a
-            href={phoneHref}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
-          >
-            <Phone className="w-4 h-4 text-slate-600" />
-            Call Strategist Direct (+91 8328248816)
-          </a>
 
           <button
             onClick={onClose}
